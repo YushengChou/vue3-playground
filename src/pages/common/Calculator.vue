@@ -6,12 +6,30 @@ const operator = ref<string | null>(null)
 const waitingForNew = ref(false)
 const lastValue = ref<number | null>(null)
 
+const MAX_LENGTH = 11
+
+const formatResult = (num: number): string => {
+  if (isNaN(num)) return 'Error'
+  const str = String(num)
+  if (str.length <= MAX_LENGTH) return str
+  if (str.includes('e')) return num.toExponential(5)
+
+  if (str.includes('.')) {
+    const intLength = str.split('.')[0].length
+    if (intLength > MAX_LENGTH) return num.toExponential(5)
+    const allowedDecimals = MAX_LENGTH - intLength - 1
+    return allowedDecimals >= 0 ? String(Number(num.toFixed(allowedDecimals))) : str.slice(0, MAX_LENGTH)
+  }
+  return num.toExponential(5)
+}
+
 /* ====== 數字輸入 ====== */
 const inputNumber = (num: string) => {
   if (waitingForNew.value) {
     display.value = num === '.' ? '0.' : num
     waitingForNew.value = false
   } else {
+    if (display.value.length >= MAX_LENGTH) return
     if (num === '.' && display.value.includes('.')) return
     display.value =
       display.value === '0' && num !== '.'
@@ -45,7 +63,7 @@ const chooseOperator = (op: string) => {
       waitingForNew.value = true
       return
     }
-    display.value = String(result)
+    display.value = formatResult(Number(result))
     previous.value = Number(result)
   } else {
     previous.value = current
@@ -70,12 +88,12 @@ const calculate = () => {
       waitingForNew.value = true
       return
     }
-    display.value = String(result)
+    display.value = formatResult(Number(result))
     lastValue.value = current
     previous.value = Number(result)
   } else if (lastValue.value !== null) {
     const result = operate(Number(display.value), lastValue.value, operator.value)
-    display.value = isNaN(Number(result)) ? 'Error' : String(result)
+    display.value = isNaN(Number(result)) ? 'Error' : formatResult(Number(result))
   }
 
   waitingForNew.value = true
@@ -87,7 +105,7 @@ const squareRoot = () => {
   if (current < 0) {
     display.value = 'Error'
   } else {
-    display.value = String(Math.sqrt(current))
+    display.value = formatResult(Math.sqrt(current))
   }
   waitingForNew.value = true
 }
@@ -155,6 +173,7 @@ onBeforeUnmount(() =>
         class="
           text-right text-[42px] font-bold mb-5
           text-[#111] dark:text-white
+          overflow-hidden whitespace-nowrap text-ellipsis
         "
       >
         {{ display }}

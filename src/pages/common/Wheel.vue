@@ -40,14 +40,17 @@ const anglePerItem = computed(() => {
 const wheelStyle = computed(() => {
   const count = items.value.length
 
+  // 🎨 高級活潑的色彩配置
+  const colors = [
+    '#FF4B4B', '#FF8F3D', '#FFC837', '#45C58A', '#2D9CDB',
+    '#9B51E0', '#FF758C', '#00C3FF', '#F1C40F', '#E67E22'
+  ]
+
   const segments = items.value.map((_, i) => {
     const start = i * anglePerItem.value
     const end = start + anglePerItem.value
-
-    // 🎨 HSL 平均分布（關鍵🔥）
-    const hue = Math.round((i / count) * 360)
-
-    return `hsl(${hue}, 70%, 60%) ${start}deg ${end}deg`
+    const color = colors[i % colors.length]
+    return `${color} ${start}deg ${end}deg`
   })
 
   return {
@@ -55,7 +58,7 @@ const wheelStyle = computed(() => {
   }
 })
 
-/** 🎯 旋轉（已修正多次旋轉 bug） */
+/** 🎯 旋轉（加入頂級特效） */
 const spin = async () => {
   if (rotating.value || items.value.length === 0 || finished.value) return
 
@@ -66,32 +69,52 @@ const spin = async () => {
   const index = Math.floor(Math.random() * count)
 
   /** 轉盤旋轉角度 */
-  const target =
-    360 * 5 +
-    (360 - index * anglePerItem.value - anglePerItem.value / 2)
+  const target = 360 * 7 + (360 - index * anglePerItem.value - anglePerItem.value / 2)
 
   await nextTick()
 
-  /** ✅ 用 GSAP 累加（最穩🔥） */
+  // ✨ 轉盤開始蓄力縮小
+  gsap.to(wheelRef.value, { scale: 0.95, duration: 0.4, ease: 'power2.out' })
+
+  /** ✅ 用 GSAP 累加旋轉與自然指針連動 */
   gsap.to(wheelRef.value, {
     rotate: `+=${target}`,
-    duration: 3.5,
-    ease: 'power4.out',
-    onComplete: () => {
-      result.value = items.value[index]
-      finished.value = true // 🔒 鎖住
-      // ✅ 選中扇形動畫
-      const selectedEl = labelRefs.value[index]
+    duration: 5.5,
+    ease: 'circ.out', // 使用 circ 可以讓最後停止的滑行感更明顯
+    onUpdate: function () {
+      const p = this.progress()
+      if (!wheelRef.value) return
+      const currentRot = gsap.getProperty(wheelRef.value, 'rotate') as number
 
+      // 動能參數：隨著轉盤進度越接近結尾，抖動幅度越來越小（用 1.5 次方做平滑衰減曲線）
+      const power = Math.pow(1 - p, 1.5)
+      
+      // 頻率參數：用目前的轉盤角度除以每塊的角度，讓指針真正對應到格子邊緣的「打擊感」
+      const phase = (currentRot / anglePerItem.value) * Math.PI * 2
+      
+      // 振幅：最大抖動 22 度
+      gsap.set('.pointer', { rotate: Math.sin(phase) * (22 * power) })
+    },
+    onComplete: () => {
+      // 🌟 指針回正、轉盤完美回彈
+      gsap.to('.pointer', { rotate: 0, duration: 0.6, ease: 'back.out(2)' })
+      gsap.to(wheelRef.value, { scale: 1, duration: 0.6, ease: 'back.out(2)' })
+
+      result.value = items.value[index]
+      finished.value = true 
+
+      // ✅ 選中扇形發光閃爍動畫
+      const selectedEl = labelRefs.value[index]
       if (selectedEl) {
         gsap.fromTo(
           selectedEl,
-          { scale: 1 },
+          { scale: 1, filter: 'drop-shadow(0 0 0 rgba(255,255,255,0))' },
           {
-            scale: 1.3,
-            duration: 0.3,
+            scale: 1.4,
+            filter: 'drop-shadow(0 0 12px rgba(255,255,255,1))',
+            duration: 0.4,
             yoyo: true,
-            repeat: 3,
+            repeat: 5,
             ease: 'power1.inOut',
             transformOrigin: 'center center'
           }
@@ -181,8 +204,37 @@ const getLabelStyle = (i: number) => {
 
     <!-- 轉盤 -->
     <div class="relative flex justify-center items-center">
-      <!-- 指針 -->
-      <div class="pointer"></div>
+      <!-- 高質感 3D 寶石指針 -->
+      <div class="pointer">
+        <svg viewBox="0 0 100 150" class="w-full h-full">
+          <defs>
+            <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFE066" />
+              <stop offset="50%" stop-color="#F5AF19" />
+              <stop offset="100%" stop-color="#E65C00" />
+            </linearGradient>
+            <linearGradient id="ruby" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#FF004D" />
+              <stop offset="100%" stop-color="#8B0029" />
+            </linearGradient>
+            <linearGradient id="glass" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="rgba(255,255,255,0.7)" />
+              <stop offset="50%" stop-color="rgba(255,255,255,0)" />
+            </linearGradient>
+          </defs>
+          
+          <!-- 外框金底 -->
+          <path d="M 15 24 L 85 24 L 50 145 Z" fill="url(#gold)" />
+          <!-- 裡面紅寶石主體 -->
+          <path d="M 26 30 L 74 30 L 50 130 Z" fill="url(#ruby)" />
+          <!-- 左側高光增加寶石切割度 -->
+          <path d="M 26 30 L 50 30 L 50 130 Z" fill="url(#glass)" />
+          <!-- 頂部樞紐固定環 -->
+          <circle cx="50" cy="24" r="24" fill="url(#gold)" />
+          <circle cx="50" cy="24" r="14" fill="#2d3748" />
+          <circle cx="50" cy="24" r="8" fill="#1a202c" />
+        </svg>
+      </div>
 
       <!-- 圓盤 -->
       <div
@@ -227,8 +279,12 @@ const getLabelStyle = (i: number) => {
     </div>
 
     <!-- 結果 -->
-    <div v-if="result" class="text-xl font-bold dark:text-white">
-      🎉 結果：{{ result }}
+    <div class="h-16">
+      <transition name="pop" mode="out-in">
+        <div v-if="result" class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 drop-shadow-xl text-center">
+          🎉 {{ result }} 🎉
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -236,95 +292,70 @@ const getLabelStyle = (i: number) => {
 <style scoped lang="scss">
 .wheel {
   @apply w-[280px] h-[280px] md:w-[400px] md:h-[400px]
-         rounded-full relative overflow-hidden;
-
-  /** 🌞 Light */
-  background: linear-gradient(145deg, #ffffffcc, #e5e7ebcc);
-
-  /** 🌙 Dark（關鍵🔥） */
-  @apply dark:bg-gradient-to-br dark:from-[#0f172a] dark:to-[#1e293b];
-
-  backdrop-filter: blur(30px);
-
-  border: 1px solid rgba(255,255,255,0.4);
-  @apply dark:border-white/10;
+         rounded-full relative overflow-hidden
+         border-[10px] border-white dark:border-gray-800;
 
   box-shadow:
-    0 20px 50px rgba(0,0,0,0.25),
-    inset 0 2px 10px rgba(255,255,255,0.4);
-
-  // transform: rotateX(15deg);
+    0 0 0 6px rgba(255,255,255,0.3),
+    0 30px 60px -12px rgba(0,0,0,0.6),
+    inset 0 0 40px rgba(0,0,0,0.5);
 
   /** ✨ 上層高光 */
   &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.6), transparent 60%);
-    pointer-events: none;
+    @apply content-empty absolute inset-0 rounded-full pointer-events-none;
+    background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.4), transparent 50%);
   }
 }
 
-/** 🏷️ 文字（這版會乾淨很多） */
+/** 🏷️ 文字 */
 .label {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform-origin: center;
+  @apply absolute top-1/2 left-1/2 origin-center
+         text-white text-sm md:text-base font-extrabold tracking-[1px];
 
-  @apply text-gray-800 dark:text-white
-         text-xs md:text-sm font-semibold;
+  /** ✨ 提升可讀性與深度 */
+  text-shadow: 0 2px 5px rgba(0,0,0,0.6);
 
-  letter-spacing: 1px;
-
-  /** ✨ 提升可讀性 */
-  text-shadow:
-    0 1px 2px rgba(0,0,0,0.2);
-
-  @apply dark:text-shadow-[0_2px_4px_rgba(0,0,0,0.8)];
   .label-inner {
-    display: inline-block;
+    @apply inline-block;
   }
 }
 
-/** 🔺 指針（升級重點🔥） */
+/** 🔺 高規精工指針（搭配 SVG） */
 .pointer {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%) rotate(180deg);
-  z-index: 1;
-  width: 0;
-  height: 0;
-
-  border-left: 16px solid transparent;
-  border-right: 16px solid transparent;
-
-  border-bottom: 26px solid #ef4444;
-
-  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.4));
+  @apply absolute top-[-30px] left-1/2 ml-[-30px] z-20 
+         w-[60px] h-[90px] origin-[50%_16%];
+  
+  /* 立體光影效果無法用一般 util 所以保留 */
+  filter: drop-shadow(0 15px 12px rgba(0, 0, 0, 0.6)) 
+          drop-shadow(0 2px 5px rgba(255, 215, 0, 0.4));
 }
 
-/** 🧊 中心（做焦點🔥🔥） */
+/** 🧊 中心轉軸 金屬鈕扣 */
 .wheel::after {
-  content: '';
-  position: absolute;
+  @apply content-empty absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+         w-[45px] h-[45px] rounded-full border-4 border-white;
 
-  width: 30px;
-  height: 30px;
-
-  border-radius: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  background: radial-gradient(circle, #ffffff, #d1d5db);
-
-  @apply dark:bg-gradient-to-br dark:from-gray-200 dark:to-gray-500;
+  background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 40%, #9e9e9e 100%);
 
   box-shadow:
-    0 6px 15px rgba(0,0,0,0.4),
-    inset 0 3px 8px rgba(255,255,255,0.6);
+    0 10px 20px rgba(0,0,0,0.6),
+    inset 0 -3px 8px rgba(0,0,0,0.3);
+}
+
+/* 🎇 結果跳出特效 */
+.pop-enter-active {
+  animation: pop-in 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.pop-leave-active {
+  animation: pop-out 0.3s ease;
+}
+
+@keyframes pop-in {
+  0% { transform: scale(0.3); opacity: 0; filter: blur(10px); }
+  100% { transform: scale(1); opacity: 1; filter: blur(0); }
+}
+@keyframes pop-out {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.5); opacity: 0; }
 }
 </style>

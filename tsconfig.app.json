@@ -8,11 +8,9 @@
       "unplugin-auto-import/types"
     ],
 
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"]
     },
-    "ignoreDeprecations": "5.0",
 
     /* Linting */
     "strict": true,
