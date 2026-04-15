@@ -38,8 +38,6 @@ const anglePerItem = computed(() => {
 
 /** 轉盤樣式 */
 const wheelStyle = computed(() => {
-  const count = items.value.length
-
   // 🎨 高級活潑的色彩配置
   const colors = [
     '#FF4B4B', '#FF8F3D', '#FFC837', '#45C58A', '#2D9CDB',
