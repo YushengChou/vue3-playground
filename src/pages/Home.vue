@@ -5,7 +5,7 @@
     <transition name="fade">
       <div
         v-show="menuOpen"
-        class="fixed inset-0 bg-black/20 z-21 md:hidden"
+        class="fixed inset-0 bg-black/20 z-[21] md:hidden"
         @click="menuOpen = false"
       ></div>
     </transition>
@@ -17,7 +17,7 @@
         @click.stop
         class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48
                bg-white dark:bg-gray-800 transition-colors duration-300
-               shadow-lg rounded-b-xl p-4 flex flex-col space-y-2 z-22 md:hidden pointer-events-auto"
+               shadow-lg rounded-b-xl p-4 flex flex-col space-y-2 z-[22] md:hidden pointer-events-auto"
       >
         <button
           @click.stop="toggleTheme"
@@ -91,11 +91,11 @@ interface Feature {
 }
 
 const features: Feature[] = [
-  // { name: '計算機', path: '/calculator', desc: '簡單計算功能' },
-  // { name: '倒數計時', path: '/countdown', desc: '倒數計時器' },
-  // { name: '擲骰子', path: '/dice', desc: '擲骰子' },
-  // { name: '日期計算', path: '/datecalculator', desc: '計算日期差異' },
-  // { name: '大轉盤', path: '/wheel', desc: '大轉盤' },
+  { name: '計算機', path: '/calculator', desc: '簡單計算功能' },
+  { name: '倒數計時', path: '/countdown', desc: '倒數計時器' },
+  { name: '擲骰子', path: '/dice', desc: '擲骰子' },
+  { name: '日期計算', path: '/datecalculator', desc: '計算日期差異' },
+  { name: '大轉盤', path: '/wheel', desc: '大轉盤' },
 ]
 </script>
 
