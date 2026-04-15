@@ -186,7 +186,7 @@ const getLabelStyle = (i: number) => {
 </script>
 
 <template>
-  <div class="p-4 flex flex-col items-center gap-6
+  <div class="p-4 flex flex-col items-center gap-16
     bg-gradient-to-br min-h-screen
     from-gray-100 to-gray-200
     dark:from-[#020617] dark:to-[#0f172a]
@@ -320,10 +320,15 @@ const getLabelStyle = (i: number) => {
 
 /** 🔺 高規精工指針（搭配 SVG） */
 .pointer {
-  @apply absolute top-[-30px] left-1/2 ml-[-30px] z-20 
-         w-[60px] h-[90px] origin-[50%_16%];
+  @apply absolute left-1/2 z-20 origin-[50%_16%];
   
-  /* 立體光影效果無法用一般 util 所以保留 */
+  /* 手機版尺寸 */
+  @apply w-[40px] h-[60px] top-[-20px] ml-[-20px];
+  
+  /* 桌機版尺寸 (md: 768px+) */
+  @apply md:w-[60px] md:h-[90px] md:top-[-30px] md:ml-[-30px];
+  
+  /* 立體光影效果保留 */
   filter: drop-shadow(0 15px 12px rgba(0, 0, 0, 0.6)) 
           drop-shadow(0 2px 5px rgba(255, 215, 0, 0.4));
 }
@@ -331,7 +336,13 @@ const getLabelStyle = (i: number) => {
 /** 🧊 中心轉軸 金屬鈕扣 */
 .wheel::after {
   @apply content-empty absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-         w-[45px] h-[45px] rounded-full border-4 border-white;
+         rounded-full border-4 border-white;
+
+  /* 手機版中心按鈕 */
+  @apply w-[30px] h-[30px];
+
+  /* 桌機版中心按鈕 */
+  @apply md:w-[45px] md:h-[45px];
 
   background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 40%, #9e9e9e 100%);
 
