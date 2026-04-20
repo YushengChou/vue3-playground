@@ -178,19 +178,19 @@ const getLabelStyle = (i: number) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-100 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12 flex flex-col items-center overflow-x-hidden">
+  <div class="min-h-screen bg-slate-100 dark:bg-slate-950 transition-colors duration-500 p-4 md:p-12 flex flex-col items-center overflow-x-hidden">
     <BaseHeader title="Physical Fortune" />
     
     <main class="w-full max-w-5xl flex flex-col items-center">
       <!-- Title -->
-      <div class="text-center mb-12 w-full">
-        <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-3 tracking-tighter">
-          大轉盤 <span class="bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent italic">WHEEL</span>
+      <div class="text-center mb-8 md:mb-12 w-full">
+        <h1 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 md:mb-3 tracking-tighter">
+          幸運大轉盤 <span class="bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent italic">WHEEL</span>
         </h1>
         <div class="w-12 h-1 bg-pink-500 mx-auto rounded-full opacity-20"></div>
       </div>
       
-      <div class="w-full flex flex-col items-center gap-12 bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl p-8 md:p-12 border border-slate-100 dark:border-slate-800">
+      <div class="w-full flex flex-col items-center gap-6 md:gap-12 bg-white dark:bg-slate-900 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl p-6 md:p-12 border border-slate-100 dark:border-slate-800">
       <!-- 輸入 -->
       <div class="w-full flex justify-center">
         <div class="w-full max-w-md">
@@ -254,13 +254,13 @@ const getLabelStyle = (i: number) => {
       </div>
 
       <!-- 按鈕群 -->
-      <div class="flex gap-4">
+      <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md justify-center">
         <button
           @click="spin"
           :disabled="rotating || finished"
-          class="relative overflow-hidden group px-12 py-5 rounded-[2rem] bg-pink-500 text-white font-black text-xl shadow-2xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
+          class="relative overflow-hidden group px-8 py-5 rounded-[2rem] bg-pink-500 text-white font-black text-xl shadow-2xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 whitespace-nowrap"
         >
-          <span class="relative z-10 flex items-center gap-3 tracking-widest">
+          <span class="relative z-10 flex items-center justify-center gap-3 tracking-widest">
             <span class="text-2xl">🎪</span> 立即旋轉
           </span>
           <div class="absolute inset-0 bg-gradient-to-r from-pink-600 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -269,9 +269,9 @@ const getLabelStyle = (i: number) => {
         <button
           @click="resetWheel"
           :disabled="rotating"
-          class="px-8 py-5 rounded-[2rem] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 disabled:opacity-50 transition-all text-lg border border-slate-200 dark:border-slate-700 uppercase tracking-widest"
+          class="px-8 py-5 rounded-[2rem] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 disabled:opacity-50 transition-all text-lg border border-slate-200 dark:border-slate-700 uppercase tracking-widest whitespace-nowrap"
         >
-          重置
+          重置 Reset
         </button>
       </div>
 
