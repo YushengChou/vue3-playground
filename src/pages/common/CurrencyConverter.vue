@@ -5,38 +5,10 @@ const amount = ref<number>(1)
 const fromCurrency = ref('USD')
 const toCurrency = ref('TWD')
 const rates = ref<Record<string, number>>({})
-const currencies = ref<Record<string, string>>({
-  "USD": "美元",
-  "TWD": "新台幣",
-  "JPY": "日圓",
-  "EUR": "歐元",
-  "GBP": "英鎊",
-  "AUD": "澳幣",
-  "CAD": "加幣",
-  "CNY": "人民幣",
-  "HKD": "港幣",
-  "KRW": "韓元",
-  "SG": "新加坡元"
-})
+
 const loading = ref(true)
 const lastUpdated = ref('')
 
-const fetchRates = async () => {
-  loading.value = true
-  try {
-    // 使用 frankfurter.app API (免 API Key，適合展示)
-    const res = await fetch(`https://api.frankfurter.app/latest?from=${fromCurrency.value}`)
-    const data = await res.json()
-    rates.value = data.rates
-    // Frankfurter 本身不包含 TWD，如果沒有 TWD，我們可能需要另一個備用 API 或是說明
-    // 註：Frankfurter 支援的是主要貨幣，TWD 剛好沒在裡面，我換個 API 或調整列表
-    lastUpdated.value = data.date
-  } catch (error) {
-    console.error('Failed to fetch rates:', error)
-  } finally {
-    loading.value = false
-  }
-}
 
 // 由於 Frankfurter 不支援 TWD，我改用另外一個常見的開放 API: exchangerate-api
 const fetchRatesV2 = async () => {
