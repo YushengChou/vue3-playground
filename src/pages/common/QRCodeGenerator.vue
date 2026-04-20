@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import Skeleton from '@/components/common/Skeleton.vue'
 
-const text = ref('https://github.com/YushengChou/vue3-playground')
+const text = ref('https://yushengchou.github.io/vue3-playground')
 const size = ref(300)
 const loading = ref(false)
 const qrUrl = ref('')
+const hasLoaded = ref(false)
 
 const generateQR = () => {
   if (!text.value.trim()) return
@@ -24,6 +25,7 @@ const generateQR = () => {
 // 當圖片載入完成後停止 loading
 const onImageLoad = () => {
   loading.value = false
+  hasLoaded.value = true
 }
 
 const downloadQR = async () => {
@@ -100,7 +102,7 @@ onMounted(() => {
              <label class="w-full block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1 text-center md:text-left">預覽 Preview</label>
              
              <div class="relative w-64 h-64 bg-slate-50 dark:bg-slate-800 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
-                <Skeleton v-if="loading && !qrUrl" width="80%" height="80%" />
+                <Skeleton v-if="loading && !hasLoaded" width="80%" height="80%" />
                 
                 <!-- 預覽圖 -->
                 <img 
