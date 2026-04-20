@@ -96,6 +96,10 @@ const features: Feature[] = [
   { name: '擲骰子', path: '/dice', desc: '擲骰子' },
   { name: '日期計算', path: '/datecalculator', desc: '計算日期差異' },
   { name: '大轉盤', path: '/wheel', desc: '大轉盤' },
+  { name: '骨架屏', path: '/skeleton', desc: 'Skeleton 載入佔位' },
+  { name: '世界時鐘', path: '/worldclock', desc: '全球城市即時時間' },
+  { name: '匯率轉換', path: '/currency', desc: '即時全球匯率換算' },
+  { name: 'QR Code 產生', path: '/qrcode', desc: '即時產生 QR Code' },
 ]
 </script>
 
