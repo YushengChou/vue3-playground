@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 p-6 flex flex-col items-center justify-center">
+  <div class="min-h-screen bg-slate-100 dark:bg-slate-950 transition-colors duration-500 p-6 flex flex-col items-center justify-center">
     
     <BaseHeader title="Focus Mode" />
 
@@ -36,7 +36,7 @@
           <button 
             v-for="preset in presets" :key="preset.val"
             @click="setPreset(preset.val)"
-            class="px-5 py-2 rounded-2xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-bold border border-transparent hover:border-indigo-500/50 transition-all shrink-0"
+            class="px-5 py-2 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-bold border border-transparent hover:border-indigo-500/50 transition-all shrink-0"
           >
             {{ preset.label }}
           </button>
@@ -50,7 +50,7 @@
               <input
                 type="number"
                 v-model.number="inputTime"
-                class="w-full px-8 py-5 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-xl font-bold dark:text-white"
+                class="w-full px-8 py-5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-xl font-bold dark:text-white"
                 placeholder="輸入秒數..."
               />
               <span class="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 font-bold">Sec</span>

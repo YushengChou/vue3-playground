@@ -178,14 +178,14 @@ const getLabelStyle = (i: number) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12 flex flex-col items-center overflow-x-hidden">
+  <div class="min-h-screen bg-slate-100 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12 flex flex-col items-center overflow-x-hidden">
     <BaseHeader title="Physical Fortune" />
     
     <main class="w-full max-w-5xl flex flex-col items-center">
       <!-- Title -->
       <div class="text-center mb-12 w-full">
         <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-3 tracking-tighter">
-          幸運大轉盤 <span class="bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent italic">WHEEL</span>
+          大轉盤 <span class="bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent italic">WHEEL</span>
         </h1>
         <div class="w-12 h-1 bg-pink-500 mx-auto rounded-full opacity-20"></div>
       </div>
@@ -197,7 +197,7 @@ const getLabelStyle = (i: number) => {
            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">轉盤選項 Wheel Options</label>
            <textarea
              v-model="inputText"
-             class="w-full h-32 px-6 py-5 rounded-3xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-pink-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-lg font-medium dark:text-white resize-none"
+             class="w-full h-32 px-6 py-5 rounded-3xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-pink-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-lg font-medium dark:text-white resize-none"
              placeholder="輸入選項，用逗號分隔..."
            ></textarea>
         </div>
@@ -261,7 +261,7 @@ const getLabelStyle = (i: number) => {
           class="relative overflow-hidden group px-12 py-5 rounded-[2rem] bg-pink-500 text-white font-black text-xl shadow-2xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
         >
           <span class="relative z-10 flex items-center gap-3 tracking-widest">
-            <span class="text-2xl">🎪</span> 立即抽籤 MIX
+            <span class="text-2xl">🎪</span> 立即旋轉
           </span>
           <div class="absolute inset-0 bg-gradient-to-r from-pink-600 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
         </button>

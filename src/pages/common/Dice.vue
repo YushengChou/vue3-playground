@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen p-6 bg-slate-50 dark:bg-slate-950 transition-colors duration-500 flex flex-col items-center">
+  <div class="min-h-screen p-6 bg-slate-100 dark:bg-slate-950 transition-colors duration-500 flex flex-col items-center">
     
     <BaseHeader title="3D Physics Active" />
 

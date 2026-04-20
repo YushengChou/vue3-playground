@@ -84,7 +84,7 @@ const isDaytime = (timezone: string) => {
 </script>
 
 <template>
-  <div class="min-h-screen p-6 bg-slate-50 dark:bg-slate-950 transition-colors flex flex-col items-center">
+  <div class="min-h-screen p-6 bg-slate-100 dark:bg-slate-950 transition-colors flex flex-col items-center">
     <BaseHeader title="Global Sync" />
     
     <div class="max-w-6xl mx-auto w-full">

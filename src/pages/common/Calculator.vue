@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 p-6 flex flex-col items-center justify-center">
+  <div class="min-h-screen bg-slate-100 dark:bg-slate-950 transition-colors duration-500 p-6 flex flex-col items-center justify-center">
     
     <BaseHeader title="Scientific Base" />
 
@@ -7,7 +7,7 @@
       <div class="bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl p-8 border border-slate-100 dark:border-slate-800">
         
         <!-- 顯示與記錄區 -->
-        <div class="mb-8 p-6 rounded-3xl bg-slate-50 dark:bg-slate-950/50 flex flex-col items-end overflow-hidden">
+        <div class="mb-8 p-6 rounded-3xl bg-slate-100 dark:bg-slate-950/50 flex flex-col items-end overflow-hidden">
           <div class="text-slate-400 dark:text-slate-500 text-sm font-bold h-6 mb-1 overflow-hidden whitespace-nowrap text-ellipsis">
             {{ historyDisplay }}
           </div>
@@ -213,7 +213,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', handleKey))
 
 .btn-num {
   @extend .btn-base;
-  @apply bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-100 dark:border-slate-700;
+  @apply bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-white border border-slate-100 dark:border-slate-700;
 }
 
 .btn-tool {

@@ -63,7 +63,7 @@ const commonCurrencies = [
 </script>
 
 <template>
-  <div class="min-h-screen p-6 bg-slate-50 dark:bg-slate-950 transition-colors flex flex-col items-center">
+  <div class="min-h-screen p-6 bg-slate-100 dark:bg-slate-950 transition-colors flex flex-col items-center">
     <BaseHeader title="Real-time FX" />
     
     <div class="w-full max-w-lg">
@@ -84,7 +84,7 @@ const commonCurrencies = [
             <input 
               v-model.number="amount"
               type="number"
-              class="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-xl font-bold dark:text-white"
+              class="w-full px-6 py-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-xl font-bold dark:text-white"
               placeholder="請輸入金額"
             />
           </div>
@@ -95,7 +95,7 @@ const commonCurrencies = [
               <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">從 From</label>
               <select 
                 v-model="fromCurrency"
-                class="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 outline-none appearance-none font-bold dark:text-white"
+                class="w-full px-6 py-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 outline-none appearance-none font-bold dark:text-white"
               >
                 <option v-for="c in commonCurrencies" :key="c.code" :value="c.code">
                   {{ c.flag }} {{ c.code }} - {{ c.name }}
@@ -115,7 +115,7 @@ const commonCurrencies = [
               <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 ml-1">至 To</label>
               <select 
                 v-model="toCurrency"
-                class="w-full px-6 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 outline-none appearance-none font-bold dark:text-white"
+                class="w-full px-6 py-4 rounded-2xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-emerald-500 outline-none appearance-none font-bold dark:text-white"
               >
                 <option v-for="c in commonCurrencies" :key="c.code" :value="c.code">
                   {{ c.flag }} {{ c.code }} - {{ c.name }}

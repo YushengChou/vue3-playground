@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12 flex flex-col items-center">
+  <div class="min-h-screen bg-slate-100 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12 flex flex-col items-center">
     
     <BaseHeader title="Temporal System" />
 
@@ -169,7 +169,7 @@ const formatWeekDay = (dateStr: string) => {
 }
 
 .premium-input {
-  @apply w-full px-8 py-5 rounded-2xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent 
+  @apply w-full px-8 py-5 rounded-2xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent 
          focus:border-blue-500 focus:bg-white dark:focus:bg-slate-900 outline-none 
          transition-all text-xl font-black dark:text-white;
 }

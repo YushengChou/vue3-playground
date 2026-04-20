@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12">
+  <div class="min-h-screen bg-slate-100 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12">
     
     <!-- 手機選單遮罩 -->
     <transition name="fade">
@@ -78,7 +78,7 @@
         </div>
 
         <div class="relative z-10">
-          <div class="w-12 h-12 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-2xl mb-6 group-hover:bg-indigo-500 group-hover:text-white transition-colors duration-300">
+          <div class="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-2xl mb-6 group-hover:bg-indigo-500 group-hover:text-white transition-colors duration-300">
             {{ feature.emoji }}
           </div>
           <h2 class="text-2xl font-black mb-3 text-slate-800 dark:text-white tracking-tight">{{ feature.name }}</h2>

@@ -64,7 +64,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12 flex flex-col items-center">
+  <div class="min-h-screen bg-slate-100 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12 flex flex-col items-center">
     
     <BaseHeader title="Instant Gen" />
 
@@ -86,7 +86,7 @@ onMounted(() => {
               <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">輸入內容 Content</label>
               <textarea 
                 v-model="text"
-                class="w-full h-48 px-6 py-5 rounded-3xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-lg font-medium dark:text-white resize-none"
+                class="w-full h-48 px-6 py-5 rounded-3xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus:border-amber-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-lg font-medium dark:text-white resize-none"
                 placeholder="在此輸入網址或訊息..."
               ></textarea>
             </div>
@@ -106,7 +106,7 @@ onMounted(() => {
           <div class="w-full md:w-64 flex flex-col items-center">
              <label class="w-full block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1 text-center md:text-left">預覽 Preview</label>
              
-             <div class="relative w-64 h-64 bg-slate-50 dark:bg-slate-800 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
+             <div class="relative w-64 h-64 bg-slate-100 dark:bg-slate-800 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden">
                 <Skeleton v-if="loading && !hasLoaded" width="80%" height="80%" />
                 
                 <!-- 預覽圖 -->
