@@ -181,14 +181,27 @@ const getLabelStyle = (i: number) => {
   <div class="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12 flex flex-col items-center overflow-x-hidden">
     <BaseHeader title="Physical Fortune" />
     
-    <main class="w-full max-w-5xl flex flex-col items-center gap-12">
+    <main class="w-full max-w-5xl flex flex-col items-center">
+      <!-- Title -->
+      <div class="text-center mb-12 w-full">
+        <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-3 tracking-tighter">
+          幸運大轉盤 <span class="bg-gradient-to-r from-pink-500 to-orange-500 bg-clip-text text-transparent italic">WHEEL</span>
+        </h1>
+        <div class="w-12 h-1 bg-pink-500 mx-auto rounded-full opacity-20"></div>
+      </div>
+      
+      <div class="w-full flex flex-col items-center gap-12 bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl p-8 md:p-12 border border-slate-100 dark:border-slate-800">
       <!-- 輸入 -->
-      <textarea
-        v-model="inputText"
-        class="w-full max-w-md px-6 py-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 outline-none transition-all dark:text-white"
-        rows="3"
-        placeholder="輸入選項，用逗號分隔"
-      ></textarea>
+      <div class="w-full flex justify-center">
+        <div class="w-full max-w-md">
+           <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">轉盤選項 Wheel Options</label>
+           <textarea
+             v-model="inputText"
+             class="w-full h-32 px-6 py-5 rounded-3xl bg-slate-50 dark:bg-slate-800 border-2 border-transparent focus:border-pink-500 focus:bg-white dark:focus:bg-slate-900 outline-none transition-all text-lg font-medium dark:text-white resize-none"
+             placeholder="輸入選項，用逗號分隔..."
+           ></textarea>
+        </div>
+      </div>
 
       <!-- 轉盤 -->
       <div class="relative flex justify-center items-center py-10">
@@ -245,27 +258,34 @@ const getLabelStyle = (i: number) => {
         <button
           @click="spin"
           :disabled="rotating || finished"
-          class="px-10 py-4 rounded-2xl bg-indigo-500 text-white font-black shadow-lg shadow-indigo-500/30 hover:scale-105 active:scale-95 disabled:opacity-50 transition-all uppercase tracking-widest text-sm"
+          class="relative overflow-hidden group px-12 py-5 rounded-[2rem] bg-pink-500 text-white font-black text-xl shadow-2xl shadow-pink-500/40 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100"
         >
-          立即旋轉
+          <span class="relative z-10 flex items-center gap-3 tracking-widest">
+            <span class="text-2xl">🎪</span> 立即抽籤 MIX
+          </span>
+          <div class="absolute inset-0 bg-gradient-to-r from-pink-600 to-orange-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
         </button>
 
         <button
           @click="resetWheel"
           :disabled="rotating"
-          class="px-10 py-4 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold hover:scale-105 active:scale-95 disabled:opacity-50 transition-all uppercase tracking-widest text-sm"
+          class="px-8 py-5 rounded-[2rem] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 active:scale-95 disabled:opacity-50 transition-all text-lg border border-slate-200 dark:border-slate-700 uppercase tracking-widest"
         >
           重置
         </button>
       </div>
 
       <!-- 結果 -->
-      <div class="h-20 flex items-center justify-center">
+      <div class="h-32 w-full max-w-sm flex items-center justify-center">
         <transition name="pop" mode="out-in">
-          <div v-if="result" class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 drop-shadow-xl text-center tracking-tighter">
-            🎉 {{ result }} 🎉
+          <div v-if="result" class="w-full py-6 px-4 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700/50 rounded-3xl shadow-xl shadow-amber-500/10 flex flex-col items-center justify-center gap-1">
+            <div class="text-[10px] font-black text-amber-500/70 uppercase tracking-widest mb-1">Result</div>
+            <div class="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 drop-shadow-xl text-center tracking-tighter">
+              🎉 {{ result }} 🎉
+            </div>
           </div>
         </transition>
+      </div>
       </div>
     </main>
   </div>
@@ -275,17 +295,24 @@ const getLabelStyle = (i: number) => {
 .wheel {
   @apply w-[300px] h-[300px] md:w-[450px] md:h-[450px];
   box-shadow:
-    0 0 0 6px rgba(255,255,255,0.3),
-    0 30px 60px -12px rgba(0,0,0,0.6),
+    0 0 0 8px rgba(255,255,255,0.7),
+    0 30px 60px -12px rgba(0,0,0,0.4),
     inset 0 0 40px rgba(0,0,0,0.5);
+
+  .dark & {
+    box-shadow:
+      0 0 0 8px rgba(15, 23, 42, 0.8),
+      0 30px 60px -12px rgba(0,0,0,0.8),
+      inset 0 0 40px rgba(0,0,0,0.8);
+  }
 
   &::before {
     @apply content-empty absolute inset-0 rounded-full pointer-events-none;
-    background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.4), transparent 50%);
+    background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.6), transparent 60%);
   }
 
   &::after {
-    @apply content-empty absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-white;
+    @apply content-empty absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-4 border-white dark:border-slate-800;
     @apply w-[30px] h-[30px] md:w-[45px] md:h-[45px];
     background: radial-gradient(circle at 30% 30%, #ffffff 0%, #e0e0e0 40%, #9e9e9e 100%);
     box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 -3px 8px rgba(0,0,0,0.3);
@@ -293,14 +320,14 @@ const getLabelStyle = (i: number) => {
 }
 
 .label {
-  text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+  text-shadow: 0 2px 6px rgba(0,0,0,0.7);
 }
 
 .pointer {
   @apply absolute left-1/2 z-20 origin-[50%_16%];
   @apply w-[40px] h-[60px] top-[10px] ml-[-20px];
   @apply md:w-[60px] md:h-[90px] md:top-[0px] md:ml-[-30px];
-  filter: drop-shadow(0 15px 12px rgba(0, 0, 0, 0.6)) drop-shadow(0 2px 5px rgba(255, 215, 0, 0.4));
+  filter: drop-shadow(0 20px 20px rgba(0, 0, 0, 0.5)) drop-shadow(0 5px 10px rgba(255, 215, 0, 0.5));
 }
 
 .pop-enter-active {
