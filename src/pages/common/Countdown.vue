@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onUnmounted } from 'vue'
 import BaseHeader from '@/components/BaseHeader.vue'
 const { show } = useAlert()
 const time = ref<number>(0)
