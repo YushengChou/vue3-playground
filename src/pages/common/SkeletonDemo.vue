@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import Skeleton from '@/components/common/Skeleton.vue'
+import BaseHeader from '@/components/BaseHeader.vue'
 
 const loading = ref(true)
 
@@ -9,12 +11,14 @@ const toggleLoading = () => {
 </script>
 
 <template>
-  <div class="min-h-screen p-8 bg-gray-50 dark:bg-gray-900 transition-colors">
-    <div class="max-w-4xl mx-auto">
-      <header class="flex justify-between items-center mb-12">
+  <div class="min-h-screen p-6 md:p-12 bg-slate-50 dark:bg-slate-950 transition-colors flex flex-col items-center">
+    <BaseHeader title="UI Skeleton UX" />
+    
+    <div class="max-w-4xl mx-auto w-full">
+      <header class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
         <div>
-          <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Skeleton 骨架屏演示</h1>
-          <p class="text-gray-500 dark:text-gray-400">示範各種場景下的載入佔位效果</p>
+          <h1 class="text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">骨架屏示範 <span class="text-blue-500 italic">SKELETON</span></h1>
+          <p class="text-slate-500 dark:text-slate-400 font-medium">示範各種場景下的載入佔位效果</p>
         </div>
         <button 
           @click="toggleLoading"

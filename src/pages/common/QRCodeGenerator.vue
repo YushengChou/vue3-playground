@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref, watch, onMounted } from 'vue'
 import Skeleton from '@/components/common/Skeleton.vue'
+import BaseHeader from '@/components/BaseHeader.vue'
 
 const text = ref('https://yushengchou.github.io/vue3-playground')
 const size = ref(300)
@@ -62,9 +64,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen p-6 bg-amber-50 dark:bg-slate-950 transition-colors flex items-center justify-center">
-    <div class="w-full max-w-2xl">
-      <div class="bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl p-8 md:p-12 border border-amber-100 dark:border-slate-800">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 p-6 md:p-12 flex flex-col items-center">
+    
+    <BaseHeader title="Instant Gen" />
+
+    <main class="w-full max-w-4xl flex flex-col items-center">
+      <div class="bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl p-8 md:p-12 border border-slate-100 dark:border-slate-800">
         
         <header class="text-center mb-10">
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 mb-4">
@@ -136,7 +141,7 @@ onMounted(() => {
             </p>
         </footer>
       </div>
-    </div>
+    </main>
   </div>
 </template>
 

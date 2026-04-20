@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref, computed, watch, onMounted } from 'vue'
 import Skeleton from '@/components/common/Skeleton.vue'
+import BaseHeader from '@/components/BaseHeader.vue'
 
 const amount = ref<number>(1)
 const fromCurrency = ref('USD')
@@ -61,9 +63,11 @@ const commonCurrencies = [
 </script>
 
 <template>
-  <div class="min-h-screen p-6 bg-emerald-50 dark:bg-slate-950 transition-colors flex items-center justify-center">
+  <div class="min-h-screen p-6 bg-slate-50 dark:bg-slate-950 transition-colors flex flex-col items-center">
+    <BaseHeader title="Real-time FX" />
+    
     <div class="w-full max-w-lg">
-      <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-emerald-100 dark:border-slate-800">
+      <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-slate-100 dark:border-slate-800">
         
         <header class="text-center mb-10">
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 mb-4">

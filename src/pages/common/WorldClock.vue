@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import BaseHeader from '@/components/BaseHeader.vue'
 
 interface CityTime {
   name: string
@@ -32,46 +33,66 @@ onUnmounted(() => {
   if (timer) clearInterval(timer)
 })
 
+const timeFormatters = new Map<string, Intl.DateTimeFormat>()
+const dateFormatters = new Map<string, Intl.DateTimeFormat>()
+
+const getTimeFormatter = (timezone: string) => {
+  if (!timeFormatters.has(timezone)) {
+    timeFormatters.set(timezone, new Intl.DateTimeFormat('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: timezone
+    }))
+  }
+  return timeFormatters.get(timezone)!
+}
+
+const getDateFormatter = (timezone: string) => {
+  if (!dateFormatters.has(timezone)) {
+    dateFormatters.set(timezone, new Intl.DateTimeFormat('zh-TW', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+      timeZone: timezone
+    }))
+  }
+  return dateFormatters.get(timezone)!
+}
+
 const formatTime = (timezone: string) => {
-  return new Intl.DateTimeFormat('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
-    timeZone: timezone
-  }).format(currentTime.value)
+  return getTimeFormatter(timezone).format(currentTime.value)
 }
 
 const formatDate = (timezone: string) => {
-  return new Intl.DateTimeFormat('zh-TW', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: 'long',
-    timeZone: timezone
-  }).format(currentTime.value)
+  return getDateFormatter(timezone).format(currentTime.value)
 }
 
 /** 判斷是否為白天 (06:00 - 18:00) */
 const isDaytime = (timezone: string) => {
-  const hour = parseInt(new Intl.DateTimeFormat('en-US', {
+  const hourStr = new Intl.DateTimeFormat('en-US', {
     hour: '2-digit',
     hour12: false,
     timeZone: timezone
-  }).format(currentTime.value))
+  }).format(currentTime.value)
+  const hour = parseInt(hourStr)
   return hour >= 6 && hour < 18
 }
 
 </script>
 
 <template>
-  <div class="min-h-screen p-6 bg-slate-50 dark:bg-slate-950 transition-colors">
-    <div class="max-w-6xl mx-auto">
-      <header class="mb-10 text-center">
+  <div class="min-h-screen p-6 bg-slate-50 dark:bg-slate-950 transition-colors flex flex-col items-center">
+    <BaseHeader title="Global Sync" />
+    
+    <div class="max-w-6xl mx-auto w-full">
+      <header class="mb-12 text-center">
         <h1 class="text-4xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">
-          世界時鐘 <span class="text-blue-500 italic">World Clock</span>
+          世界時鐘 <span class="bg-gradient-to-r from-blue-500 to-indigo-500 bg-clip-text text-transparent italic md:text-5xl ml-2 uppercase">World</span>
         </h1>
-        <p class="text-slate-500 dark:text-slate-400">精準同步全球主要城市的即時時間</p>
+        <p class="text-slate-500 dark:text-slate-400 font-medium">精準同步全球主要城市的即時時間</p>
       </header>
 
       <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

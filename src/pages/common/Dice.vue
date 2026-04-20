@@ -1,141 +1,172 @@
 <template>
-  <div
-    class="h-screen flex flex-col items-center justify-center 
-          bg-gray-100 dark:bg-gray-700"
-    @pointerdown="onPointerDown"
-    @pointerup="onPointerUp"
-  >
-    <!-- 控制 -->
-    <div class="mb-10 text-white text-sm sm:text-base">
-      <label v-for="n in 3" :key="n" class="mr-4 text-base cursor-pointer text-gray-900 dark:text-gray-100">
-        <input type="radio" :value="n" v-model="diceCount" /> {{ n }} 顆
-      </label>
-    </div>
+  <div class="min-h-screen p-6 bg-slate-50 dark:bg-slate-950 transition-colors duration-500 flex flex-col items-center">
+    
+    <BaseHeader title="3D Physics Active" />
 
-    <!-- 骰子區 -->
-    <div class="flex flex-wrap justify-center gap-6 sm:gap-10 md:gap-12 mb-10">
-      <div
-        v-for="index in diceCount"
-        :key="index"
-        class="scene relative 
-         w-20 h-20 
-         sm:w-26 sm:h-26 
-         md:w-30 md:h-30 
-         perspective-900"
+    <main class="w-full max-w-4xl flex flex-col items-center">
+      <!-- 標題 -->
+      <div class="text-center mb-12">
+        <h1 class="text-4xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
+          3D 擲骰子 <span class="text-indigo-500 italic">Lucky Dice</span>
+        </h1>
+        <p class="text-slate-400 dark:text-slate-500 font-medium">點擊按鈕或在螢幕上滑動擲出骰子</p>
+      </div>
+
+      <!-- 控制面板 -->
+      <div class="p-2 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl border border-white dark:border-slate-800 rounded-[2rem] shadow-xl mb-8 flex gap-2">
+        <button 
+          v-for="n in 5" :key="n"
+          @click="diceCount = n"
+          class="px-6 py-3 rounded-2xl font-bold transition-all duration-300"
+          :class="diceCount === n 
+            ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30' 
+            : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800'"
+        >
+          {{ n }} 顆
+        </button>
+      </div>
+
+      <!-- 骰子舞台 -->
+      <div 
+        class="relative w-full min-h-[200px] flex flex-wrap justify-center items-center gap-12 mb-8"
+        @pointerdown="onPointerDown"
+        @pointerup="onPointerUp"
       >
         <div
-          class="dice w-full h-full relative preserve-3d will-change-transform"
-          :ref="el => diceRefs[index-1] = el"
+          v-for="index in diceCount"
+          :key="index"
+          class="scene relative w-24 h-24 sm:w-32 sm:h-32 perspective-1000"
         >
-          <!-- faces -->
-          <div class="face front"><span class="dot center"></span></div>
-
-          <div class="face back">
-            <span class="dot tl"></span>
-            <span class="dot tr"></span>
-            <span class="dot ml"></span>
-            <span class="dot mr"></span>
-            <span class="dot bl"></span>
-            <span class="dot br"></span>
+          <div
+            class="dice w-full h-full relative preserve-3d will-change-transform"
+            :ref="el => diceRefs[index-1] = el"
+          >
+            <!-- 骰子六面 -->
+            <div class="face front"><span class="dot d-center"></span></div>
+            <div class="face back">
+              <span class="dot d-tl"></span><span class="dot d-tr"></span>
+              <span class="dot d-ml"></span><span class="dot d-mr"></span>
+              <span class="dot d-bl"></span><span class="dot d-br"></span>
+            </div>
+            <div class="face right">
+              <span class="dot d-tl"></span><span class="dot d-center"></span><span class="dot d-br"></span>
+            </div>
+            <div class="face left">
+              <span class="dot d-tl"></span><span class="dot d-tr"></span>
+              <span class="dot d-bl"></span><span class="dot d-br"></span>
+            </div>
+            <div class="face top">
+              <span class="dot d-tl"></span><span class="dot d-tr"></span>
+              <span class="dot d-center"></span>
+              <span class="dot d-bl"></span><span class="dot d-br"></span>
+            </div>
+            <div class="face bottom">
+              <span class="dot d-tl"></span><span class="dot d-br"></span>
+            </div>
           </div>
-
-          <div class="face right">
-            <span class="dot tl"></span>
-            <span class="dot center"></span>
-            <span class="dot br"></span>
-          </div>
-
-          <div class="face left">
-            <span class="dot tl"></span>
-            <span class="dot tr"></span>
-            <span class="dot bl"></span>
-            <span class="dot br"></span>
-          </div>
-
-          <div class="face top">
-            <span class="dot tl"></span>
-            <span class="dot tr"></span>
-            <span class="dot bl"></span>
-            <span class="dot br"></span>
-            <span class="dot center"></span>
-          </div>
-
-          <div class="face bottom">
-            <span class="dot tl"></span>
-            <span class="dot br"></span>
-          </div>
+          <!-- 骰子陰影 -->
+          <div class="dice-shadow"></div>
         </div>
       </div>
-    </div>
 
-    <!-- 按鈕 -->
-    <button
-      class="px-6 py-3 text-lg sm:text-xl 
-        rounded-xl bg-blue-500 text-white 
-        active:scale-95 hover:bg-blue-600 transition"
-      @click="rollDice"
-    >
-      🎲 Roll Dice
-    </button>
+      <!-- 互動按鈕 -->
+      <div class="flex flex-col items-center gap-8">
+        <button
+          @click="rollDice"
+          :disabled="isRolling"
+          class="group relative px-12 py-5 rounded-[2rem] bg-indigo-500 text-white font-black text-xl shadow-2xl shadow-indigo-500/40 hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 overflow-hidden"
+        >
+          <span class="relative z-10 flex items-center gap-3">
+             <span class="text-2xl">🎲</span> {{ isRolling ? '正在旋轉...' : '擲骰子 ROLL' }}
+          </span>
+          <div class="absolute inset-0 bg-gradient-to-r from-indigo-600 to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        </button>
 
-    <!-- 結果 -->
-    <div class="text-gray-900 dark:text-gray-100 text-lg mt-10">
-      <div>骰子點數：{{ diceResults.join(', ') || 0 }}</div>
-      <div>總和：{{ total }}</div>
-    </div>
+        <!-- 結果顯示 -->
+        <transition name="fade">
+          <div v-if="diceResults.length > 0" class="flex flex-col items-center bg-white dark:bg-slate-900 px-10 py-6 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-xl">
+             <div class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">總和 Total Result</div>
+             <div class="text-6xl font-black text-slate-800 dark:text-white">{{ total }}</div>
+             <div class="flex gap-3 mt-4">
+                <span 
+                  v-for="(val, idx) in diceResults" :key="idx"
+                  class="w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-sm"
+                >
+                  {{ val }}
+                </span>
+             </div>
+          </div>
+        </transition>
+      </div>
+    </main>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+import BaseHeader from '@/components/BaseHeader.vue'
 import { gsap } from "gsap";
 
-// 可動態控制骰子數量
-const diceCount = ref(3);
+const diceCount = ref(2);
 const diceRefs = ref<any[]>([]);
 const diceResults = ref<number[]>([]);
+const isRolling = ref(false);
 
-// 修正：點數對應朝上的旋轉角度 (front朝上=1, top朝上=5等)
 const faces: any = {
-  1: { x: 0, y: 0 },     // front 朝上
-  2: { x: 90, y: 0 },    // bottom 朝上
-  3: { x: 0, y: -90 },    // right 朝上
-  4: { x: 0, y: 90 },   // left 朝上
-  5: { x: -90, y: 0 },   // top 朝上
-  6: { x: 0, y: 180 }    // back 朝上
+  1: { x: 0, y: 0 },       // Front
+  2: { x: 90, y: 0 },      // Bottom
+  3: { x: 0, y: -90 },     // Right
+  4: { x: 0, y: 90 },      // Left
+  5: { x: -90, y: 0 },     // Top
+  6: { x: 0, y: 180 }      // Back
 };
 
-// 計算總和
 const total = computed(() => diceResults.value.reduce((a, b) => a + b, 0));
 
-// 擲骰子
 function rollDice() {
+  if (isRolling.value) return;
+  isRolling.value = true;
   diceResults.value = [];
   
-  diceRefs.value.slice(0, diceCount.value).forEach((dice) => {
+  const currentRefs = diceRefs.value.slice(0, diceCount.value);
+  
+  currentRefs.forEach((dice, index) => {
     const result = Math.floor(Math.random() * 6) + 1;
     diceResults.value.push(result);
 
-    const target = faces[result];
+    const targetPos = faces[result];
+    const randomRotX = (Math.floor(Math.random() * 5) + 5) * 360; 
+    const randomRotY = (Math.floor(Math.random() * 5) + 5) * 360;
 
-    // 每次重置
-    gsap.set(dice, { rotationX: 0, rotationY: 0 });
+    // 動畫序列
+    const tl = gsap.timeline({
+      onComplete: () => {
+        if (index === currentRefs.length - 1) isRolling.value = false;
+      }
+    });
 
-    const spinX = target.x + 360 * 3;
-    const spinY = target.y + 360 * 3;
+    tl.to(dice, {
+      y: -120 - Math.random() * 50,
+      rotationX: randomRotX + targetPos.x,
+      rotationY: randomRotY + targetPos.y,
+      duration: 0.8 + Math.random() * 0.4,
+      ease: "power2.out"
+    })
+    .to(dice, {
+      y: 0,
+      duration: 0.6,
+      ease: "bounce.out"
+    });
 
+    // 陰影動畫
+    const shadow = dice.parentElement.querySelector('.dice-shadow');
     gsap.timeline()
-      .to(dice, { y: -80, duration: 0.25 })
-      .to(dice, {
-        rotationX: spinX,
-        rotationY: spinY,
-        duration: 1,
-        ease: "power3.out"
-      }, "<")
-      .to(dice, { y: 0, duration: 0.35, ease: "bounce.out" }, "<");
+      .to(shadow, { scale: 0.5, opacity: 0.1, duration: 0.6, ease: "power2.out" })
+      .to(shadow, { scale: 1, opacity: 0.2, duration: 0.6, ease: "bounce.out" });
   });
 }
 
-// 滑鼠拖擲
+// 支援滑動拋擲
 let startX = 0;
 let startY = 0;
 function onPointerDown(e: PointerEvent) {
@@ -145,57 +176,66 @@ function onPointerDown(e: PointerEvent) {
 function onPointerUp(e: PointerEvent) {
   const dx = e.clientX - startX;
   const dy = e.clientY - startY;
-  if (Math.sqrt(dx * dx + dy * dy) > 60) rollDice();
+  if (Math.sqrt(dx * dx + dy * dy) > 80) rollDice();
 }
+
+onMounted(() => {
+  diceResults.value = [];
+})
 </script>
 
 <style scoped lang="scss">
+.preserve-3d { transform-style: preserve-3d; }
+
 .scene {
-  --dice-size: 80px;
-
-  @screen sm {
-    --dice-size: 104px;
-  }
-
-  @screen md {
-    --dice-size: 120px;
-  }
-}
-.scene::after {
-  content: "";
-  @apply absolute w-20 h-5 bg-black/50 rounded-full left-1/2 -translate-x-1/2 blur-md;
-  bottom: -15px;
+  --dice-size: 96px;
+  @screen sm { --dice-size: 128px; }
 }
 
-/* 骰子面 */
+.dice-shadow {
+  @apply absolute -bottom-4 left-1/2 -translate-x-1/2 w-4/5 h-4 bg-slate-900/20 dark:bg-black/40 rounded-full blur-xl -z-10 transition-opacity;
+  opacity: 0.2;
+}
+
 .face {
-  @apply absolute w-[104%] h-[104%] left-[-2%] top-[-2%]
-         rounded-[14px]
-         bg-[linear-gradient(145deg,#ffffff,#e8e8e8)]
-         shadow-[inset_0_0_0_2px_#d8d8d8,0_6px_10px_rgba(0,0,0,0.25)];
+  @apply absolute w-full h-full border border-slate-200 dark:border-slate-800 rounded-2xl;
+  background: linear-gradient(145deg, #ffffff, #f1f5f9);
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.05), 0 5px 15px rgba(0,0,0,0.1);
   backface-visibility: hidden;
+  
+  .dark & {
+    background: linear-gradient(145deg, #1e293b, #0f172a);
+    box-shadow: inset 0 0 15px rgba(255,255,255,0.02), 0 5px 20px rgba(0,0,0,0.5);
+  }
 }
 
-/* 六面位置（保留原生） */
-.front { transform: rotateY(0deg) translateZ(calc(var(--dice-size) / 2)); }
-.back { transform: rotateY(180deg) translateZ(calc(var(--dice-size) / 2)); }
-.right { transform: rotateY(90deg) translateZ(calc(var(--dice-size) / 2)); }
-.left { transform: rotateY(-90deg) translateZ(calc(var(--dice-size) / 2)); }
-.top { transform: rotateX(90deg) translateZ(calc(var(--dice-size) / 2)); }
+.front  { transform: rotateY(0deg) translateZ(calc(var(--dice-size) / 2)); }
+.back   { transform: rotateY(180deg) translateZ(calc(var(--dice-size) / 2)); }
+.right  { transform: rotateY(90deg) translateZ(calc(var(--dice-size) / 2)); }
+.left   { transform: rotateY(-90deg) translateZ(calc(var(--dice-size) / 2)); }
+.top    { transform: rotateX(90deg) translateZ(calc(var(--dice-size) / 2)); }
 .bottom { transform: rotateX(-90deg) translateZ(calc(var(--dice-size) / 2)); }
 
-/* 點 */
 .dot {
-  @apply w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-full absolute;
-  background: radial-gradient(circle at 30% 30%, #444, #000);
+  @apply absolute w-4 h-4 sm:w-5 sm:h-5 rounded-full -translate-x-1/2 -translate-y-1/2;
+  background: radial-gradient(circle at 30% 30%, #4f46e5, #312e81);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+  
+  .dark & {
+    background: radial-gradient(circle at 30% 30%, #818cf8, #4338ca);
+  }
 }
 
-/* 點位置 */
-.center { @apply top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2; }
-.tl { @apply top-[20%] left-[20%]; }
-.tr { @apply top-[20%] right-[20%]; }
-.bl { @apply bottom-[20%] left-[20%]; }
-.br { @apply bottom-[20%] right-[20%]; }
-.ml { @apply top-1/2 left-[1%] sm:left-[5%] md:left-[7%] -translate-y-1/2; }
-.mr { @apply top-1/2 right-[1%] sm:right-[5%] md:right-[7%] -translate-y-1/2; }
+/* 點位置精確對齊 (使用 25% 和 75% 確保對稱) */
+.d-center { @apply top-1/2 left-1/2; }
+.d-tl { @apply top-[25%] left-[25%]; }
+.d-tr { @apply top-[25%] left-[75%]; }
+.d-bl { @apply top-[75%] left-[25%]; }
+.d-br { @apply top-[75%] left-[75%]; }
+.d-ml { @apply top-1/2 left-[25%]; }
+.d-mr { @apply top-1/2 left-[75%]; }
+
+.fade-enter-active, .fade-leave-active { transition: all 0.5s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(10px); }
 </style>
+
