@@ -115,6 +115,7 @@ const features: Feature[] = [
   { name: '匯率轉換', path: '/currency', desc: '即時全球匯率換算與 API 連接', emoji: '💱' },
   { name: 'QR Code 產生', path: '/qrcode', desc: '高畫質即時二維碼生成', emoji: '📱' },
   { name: '亂跑的按鈕', path: '/btn-naughty', desc: '停用時會越嚕越遠的按鈕', emoji: '🐱' },
+  { name: '位置定位', path: '/location', desc: '定位功能', emoji: '📍' },
 ]
 </script>
 
