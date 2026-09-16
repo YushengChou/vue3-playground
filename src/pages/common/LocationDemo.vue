@@ -24,7 +24,7 @@
     <!-- 地圖區 -->
     <div v-else class="w-full max-w-4xl flex flex-col items-center">
       <!-- 資訊卡 -->
-      <div class="bg-white dark:bg-slate-900 rounded-xl p-4 mb-4 shadow border border-slate-200/60 dark:border-slate-800/60 flex justify-between w-full">
+      <div class="bg-white dark:bg-slate-900 flex items-center rounded-xl p-4 mb-4 shadow border border-slate-200/60 dark:border-slate-800/60 flex justify-between w-full">
         <div>
           <p class="font-medium">使用者：{{ currentName }}</p>
           <p class="text-sm text-slate-600 dark:text-slate-400">
@@ -33,7 +33,7 @@
           <p class="text-sm text-slate-600 dark:text-slate-400">最後更新：{{ updatedAt || '取得中...' }}</p>
           <p v-if="geoError" class="text-sm text-red-500 mt-1">⚠️ {{ geoError }}</p>
         </div>
-        <button @click="handleLogout" class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer transition-colors">登出 & 刪除</button>
+        <button @click="handleLogout" class="px-3 py-1 h-50px bg-red-500 hover:bg-red-600 text-white rounded cursor-pointer transition-colors">登出</button>
       </div>
 
       <!-- Leaflet 地圖 -->
@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { LMap, LTileLayer, LMarker, LPopup } from '@vue-leaflet/vue-leaflet'
 import BaseHeader from '@/components/BaseHeader.vue'
 import { useLocation } from '@/composables/useLocation'
@@ -121,6 +121,20 @@ const handleLogout = async () => {
     updatedAt.value = ''
   }
 }
+
+onMounted(async () => {
+  if (isLoggedIn.value) {
+    console.log('[onMounted] 偵測到已登入，自動恢復追蹤：', currentName.value)
+    try {
+      await login(currentName.value) // 順便確保 auth + displayName 文件存在
+      await startTracking()
+      clearWatchFn = watchPosition()
+      unsubscribeOthers = subscribeOthers()
+    } catch (err) {
+      console.error('[onMounted] 恢復追蹤失敗：', err)
+    }
+  }
+})
 
 onBeforeUnmount(() => {
   if (clearWatchFn) clearWatchFn()
