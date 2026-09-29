@@ -35,7 +35,7 @@
               :disabled="isDisabled"
               @click="handleSuccessClick"
             >
-              {{ isDisabled ? '抓不到我吧 😜' : '點擊我！' }}
+              {{ isDisabled ? '抓不到我 😜' : '點擊我！' }}
             </BtnNaughty>
           </div>
         </div>
@@ -73,7 +73,7 @@
           <div class="space-y-4 pt-2">
             <div class="py-6 flex justify-center">
               <BtnNaughty :disabled="true" :distance="200">
-                超猛極速逃跑 (Distance: 200px) ⚡
+                移動逃跑 (Distance: 200px) ⚡
               </BtnNaughty>
             </div>
           </div>

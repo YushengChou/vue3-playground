@@ -32,7 +32,7 @@
         </div>
 
         <!-- 快速設定按鈕 -->
-        <div class="flex gap-3 mb-10 overflow-x-auto w-full justify-center no-scrollbar">
+        <div class="flex gap-3 mb-10 overflow-x-auto w-full justify-start md:justify-center px-2 max-w-full no-scrollbar">
           <button 
             v-for="preset in presets" :key="preset.val"
             @click="setPreset(preset.val)"
