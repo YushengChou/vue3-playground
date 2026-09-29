@@ -50,7 +50,12 @@
         />
         <!-- 自己的標記 -->
         <l-marker v-if="lat != null && lng != null" :lat-lng="[lat, lng]">
-          <l-popup>{{ currentName }} (你)</l-popup>
+          <l-popup>
+            <div>
+              <p class="font-bold">{{ currentName }} (你)</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">最後更新：{{ updatedAt || '剛剛' }}</p>
+            </div>
+          </l-popup>
         </l-marker>
         <!-- 其他使用者標記 -->
         <l-marker
@@ -58,7 +63,12 @@
           :key="loc.displayName"
           :lat-lng="[loc.lat, loc.lng]"
         >
-          <l-popup>{{ loc.displayName }}</l-popup>
+          <l-popup>
+            <div>
+              <p class="font-bold">{{ loc.displayName }}</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">最後更新：{{ formatTimestamp(loc.updatedAt) }}</p>
+            </div>
+          </l-popup>
         </l-marker>
       </l-map>
     </div>
@@ -146,6 +156,21 @@ const tileUrl = computed(() => 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.p
 const tileAttribution = '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
 
 const onMapReady = () => {}
+
+// 格式化 Firestore 時間戳記或 Date
+const formatTimestamp = (ts: any) => {
+  if (!ts) return '未知'
+  if (typeof ts.toDate === 'function') {
+    return ts.toDate().toLocaleString()
+  }
+  if (ts.seconds) {
+    return new Date(ts.seconds * 1000).toLocaleString()
+  }
+  if (typeof ts === 'string' || typeof ts === 'number') {
+    return new Date(ts).toLocaleString()
+  }
+  return '未知'
+}
 </script>
 
 <style scoped>

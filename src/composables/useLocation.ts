@@ -86,7 +86,7 @@ export function useLocation() {
       const pos = await fetchCurrentPosition()
       lat.value = pos.coords.latitude
       lng.value = pos.coords.longitude
-      updatedAt.value = new Date().toLocaleTimeString()
+      updatedAt.value = new Date().toLocaleString()
       writeLocation(pos.coords.latitude, pos.coords.longitude)
     } catch (err: any) {
       // err.code: 1=PERMISSION_DENIED, 2=POSITION_UNAVAILABLE, 3=TIMEOUT
@@ -104,7 +104,7 @@ export function useLocation() {
       geoError.value = null
       lat.value = pos.coords.latitude
       lng.value = pos.coords.longitude
-      updatedAt.value = new Date().toLocaleTimeString()
+      updatedAt.value = new Date().toLocaleString()
       writeLocation(pos.coords.latitude, pos.coords.longitude)
     }, err => {
       console.warn('[useLocation] watchPosition error:', err.code, err.message)
@@ -115,7 +115,7 @@ export function useLocation() {
       navigator.geolocation.getCurrentPosition(pos => {
         lat.value = pos.coords.latitude
         lng.value = pos.coords.longitude
-        updatedAt.value = new Date().toLocaleTimeString()
+        updatedAt.value = new Date().toLocaleString()
         writeLocation(pos.coords.latitude, pos.coords.longitude)
       }, err => console.warn('interval error:', err))
     }, 60000) as unknown as number
@@ -160,10 +160,32 @@ export function useLocation() {
     const usersCol = collection(db, 'users')
     return onSnapshot(usersCol, snap => {
       const list: UserLocation[] = []
+      const now = Date.now()
+      const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000
+
       snap.forEach(docSnap => {
         if (docSnap.id !== userName.value) {
           const data = docSnap.data() as UserLocation
-          // 只有当 lat / lng 都存在时才加入列表
+          let updateTimeMs: number | null = null
+
+          if (data.updatedAt?.toDate) {
+            updateTimeMs = data.updatedAt.toDate().getTime()
+          } else if (data.updatedAt?.seconds) {
+            updateTimeMs = data.updatedAt.seconds * 1000
+          } else if (data.updatedAt) {
+            updateTimeMs = new Date(data.updatedAt).getTime()
+          }
+
+          // 如果超過三天沒更新
+          if (updateTimeMs && now - updateTimeMs > THREE_DAYS_MS) {
+            // 自動清理 Firestore 上的過期資料
+            deleteDoc(doc(db, 'users', docSnap.id)).catch(err =>
+              console.warn(`[useLocation] 清理過期使用者 ${docSnap.id} 失敗:`, err)
+            )
+            return
+          }
+
+          // 只有當 lat / lng 都存在時才加入列表
           if (typeof data.lat === 'number' && typeof data.lng === 'number') {
             list.push({ ...data, displayName: data.displayName })
           }
