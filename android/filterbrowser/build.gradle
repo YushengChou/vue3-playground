@@ -1,0 +1,28 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'com.vue3playground.u2ab'
+    compileSdk rootProject.ext.compileSdkVersion
+
+    defaultConfig {
+        applicationId 'com.vue3playground.u2ab'
+        minSdk rootProject.ext.minSdkVersion
+        targetSdk rootProject.ext.targetSdkVersion
+        versionCode 3
+        versionName '1.2'
+    }
+}
+
+// AppCompat's transitive dependencies span Kotlin 1.6 and 1.8.  Keep the
+// runtime on one version so the standalone module has no duplicate classes.
+configurations.configureEach {
+    resolutionStrategy.force(
+        'org.jetbrains.kotlin:kotlin-stdlib:1.8.22',
+        'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.22',
+        'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22'
+    )
+}
+
+dependencies {
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+}

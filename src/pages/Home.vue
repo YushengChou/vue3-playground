@@ -67,6 +67,21 @@
 
     <!-- 功能列表 -->
     <main class="max-w-7xl mx-auto grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <button
+        type="button"
+        class="group relative overflow-hidden rounded-[2.5rem] border border-slate-200/50 bg-white p-8 text-left shadow-xl shadow-slate-200/20 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-indigo-500/10 active:scale-[0.99] dark:border-slate-800/50 dark:bg-slate-900 dark:shadow-none"
+        @click="openYouTubeFilterMode"
+      >
+        <div class="absolute -right-4 -bottom-4 select-none text-9xl opacity-[0.03] transition-transform duration-700 group-hover:scale-125 group-hover:rotate-12 dark:opacity-[0.05]">▶</div>
+        <div class="relative z-10">
+          <div class="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-2xl transition-colors duration-300 group-hover:bg-indigo-500 group-hover:text-white dark:bg-slate-800">▶</div>
+          <h2 class="mb-3 text-2xl font-black tracking-tight text-slate-800 dark:text-white">YouTube 過濾模式</h2>
+          <p class="text-sm leading-relaxed text-slate-500 dark:text-slate-400">以 App 內瀏覽器開啟，封鎖已知第三方廣告與追蹤請求。</p>
+          <div class="mt-8 flex items-center text-sm font-bold tracking-wide text-indigo-500 opacity-0 transition-opacity group-hover:opacity-100">
+            開啟模式 <span class="ml-2">→</span>
+          </div>
+        </div>
+      </button>
       <router-link
         v-for="feature in features"
         :key="feature.path"
@@ -94,6 +109,8 @@
 </template>
 
 <script setup lang="ts">
+import { openYouTubeFilterMode } from '@/composables/useFilteredBrowser'
+
 const { theme, toggleTheme } = useTheme()
 const menuOpen = ref(false)
 

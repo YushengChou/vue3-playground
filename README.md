@@ -1,5 +1,26 @@
-# Vue 3 + TypeScript + Vite
+# Vue 3 Tools
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Web development
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+```bash
+npm install
+npm run dev
+```
+
+## Android
+
+This Vue app is packaged for Android with Capacitor. Build the web bundle and copy it into the native Android project:
+
+```bash
+npm run cap:sync
+```
+
+Then open `android/` in Android Studio, select a device or emulator, and run the app. If Android Studio is already installed, this also opens the project:
+
+```bash
+npm run cap:open:android
+```
+
+`npm run build` keeps the GitHub Pages base path. `npm run cap:build` uses a relative base path required by Capacitor's native WebView.
+
+The package currently wraps the existing tools as an Android app. Any content-filtering feature needs native implementation and must remain within Android and YouTube policy requirements.

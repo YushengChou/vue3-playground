@@ -5,8 +5,10 @@ import UnoCSS from 'unocss/vite'
 import { fileURLToPath, URL } from 'node:url'
 
 // https://vite.dev/config/
-export default defineConfig({
-  base: '/vue3-playground/',
+export default defineConfig(({ mode }) => ({
+  // GitHub Pages needs the repository path; Capacitor serves dist at the
+  // root of its native WebView.
+  base: mode === 'capacitor' ? './' : '/vue3-playground/',
   plugins: [
     vue(),
     AutoImport({
@@ -29,4 +31,4 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-})
+}))
