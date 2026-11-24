@@ -8,8 +8,8 @@ android {
         applicationId 'com.vue3playground.u2ab'
         minSdk rootProject.ext.minSdkVersion
         targetSdk rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName '1.2'
+        versionCode 4
+        versionName '1.3'
     }
 }
 

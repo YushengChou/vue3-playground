@@ -5,8 +5,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
@@ -14,6 +17,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,15 +31,20 @@ public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private EditText addressBar;
     private TextView ruleStatus;
+    private FrameLayout fullscreenContainer;
+    private View fullscreenView;
+    private WebChromeClient.CustomViewCallback fullscreenCallback;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        LinearLayout root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
+        FrameLayout root = new FrameLayout(this);
         root.setBackgroundColor(Color.WHITE);
+
+        LinearLayout browserLayout = new LinearLayout(this);
+        browserLayout.setOrientation(LinearLayout.VERTICAL);
 
         LinearLayout toolbar = new LinearLayout(this);
         toolbar.setOrientation(LinearLayout.VERTICAL);
@@ -82,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         ruleStatus.setTextSize(12);
         ruleStatus.setPadding(0, dp(6), 0, 0);
         toolbar.addView(ruleStatus);
-        root.addView(toolbar);
+        browserLayout.addView(toolbar);
 
         webView = new WebView(this);
         WebSettings settings = webView.getSettings();
@@ -90,8 +99,17 @@ public class MainActivity extends AppCompatActivity {
         settings.setDomStorageEnabled(true);
         settings.setMediaPlaybackRequiresUserGesture(true);
         webView.setWebViewClient(new FilteringWebViewClient());
-        root.addView(webView, new LinearLayout.LayoutParams(
+        webView.setWebChromeClient(new FullscreenWebChromeClient());
+        browserLayout.addView(webView, new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
+        root.addView(browserLayout, new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        fullscreenContainer = new FrameLayout(this);
+        fullscreenContainer.setBackgroundColor(Color.BLACK);
+        fullscreenContainer.setVisibility(View.GONE);
+        root.addView(fullscreenContainer, new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(root);
 
         FilterRuleStore.initialize(this, (ruleCount, downloaded) -> runOnUiThread(() ->
@@ -111,8 +129,34 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) webView.goBack();
+        if (fullscreenView != null) hideFullscreen();
+        else if (webView.canGoBack()) webView.goBack();
         else super.onBackPressed();
+    }
+
+    private void showFullscreen(View view, WebChromeClient.CustomViewCallback callback) {
+        if (fullscreenView != null) {
+            callback.onCustomViewHidden();
+            return;
+        }
+        fullscreenView = view;
+        fullscreenCallback = callback;
+        webView.setVisibility(View.GONE);
+        fullscreenContainer.addView(view, new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        fullscreenContainer.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    private void hideFullscreen() {
+        if (fullscreenView == null) return;
+        fullscreenContainer.removeView(fullscreenView);
+        fullscreenContainer.setVisibility(View.GONE);
+        webView.setVisibility(View.VISIBLE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (fullscreenCallback != null) fullscreenCallback.onCustomViewHidden();
+        fullscreenView = null;
+        fullscreenCallback = null;
     }
 
     private int dp(int value) {
@@ -139,6 +183,18 @@ public class MainActivity extends AppCompatActivity {
             Uri url = request.getUrl();
             if ("http".equals(url.getScheme()) || "https".equals(url.getScheme())) view.loadUrl(url.toString());
             return true;
+        }
+    }
+
+    private final class FullscreenWebChromeClient extends WebChromeClient {
+        @Override
+        public void onShowCustomView(View view, CustomViewCallback callback) {
+            showFullscreen(view, callback);
+        }
+
+        @Override
+        public void onHideCustomView() {
+            hideFullscreen();
         }
     }
 }

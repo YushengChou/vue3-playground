@@ -5,13 +5,17 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -44,15 +48,20 @@ public class FilteredBrowserActivity extends AppCompatActivity {
     ));
 
     private WebView webView;
+    private FrameLayout fullscreenContainer;
+    private View fullscreenView;
+    private WebChromeClient.CustomViewCallback fullscreenCallback;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        LinearLayout root = new LinearLayout(this);
-        root.setOrientation(LinearLayout.VERTICAL);
+        FrameLayout root = new FrameLayout(this);
         root.setBackgroundColor(Color.WHITE);
+
+        LinearLayout browserLayout = new LinearLayout(this);
+        browserLayout.setOrientation(LinearLayout.VERTICAL);
 
         LinearLayout toolbar = new LinearLayout(this);
         toolbar.setGravity(Gravity.CENTER_VERTICAL);
@@ -73,7 +82,7 @@ public class FilteredBrowserActivity extends AppCompatActivity {
         title.setTextSize(17);
         title.setGravity(Gravity.CENTER_VERTICAL);
         toolbar.addView(title, new LinearLayout.LayoutParams(0, dp(48), 1));
-        root.addView(toolbar, new LinearLayout.LayoutParams(
+        browserLayout.addView(toolbar, new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         webView = new WebView(this);
@@ -83,8 +92,17 @@ public class FilteredBrowserActivity extends AppCompatActivity {
         settings.setMediaPlaybackRequiresUserGesture(true);
         settings.setUserAgentString(settings.getUserAgentString() + " Vue3ToolsFilteredBrowser/1.0");
         webView.setWebViewClient(new FilteringWebViewClient());
-        root.addView(webView, new LinearLayout.LayoutParams(
+        webView.setWebChromeClient(new FullscreenWebChromeClient());
+        browserLayout.addView(webView, new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, 0, 1));
+
+        root.addView(browserLayout, new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        fullscreenContainer = new FrameLayout(this);
+        fullscreenContainer.setBackgroundColor(Color.BLACK);
+        fullscreenContainer.setVisibility(View.GONE);
+        root.addView(fullscreenContainer, new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(root);
 
         String url = getIntent().getStringExtra(START_URL);
@@ -93,11 +111,38 @@ public class FilteredBrowserActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
+        if (fullscreenView != null) {
+            hideFullscreen();
+        } else if (webView.canGoBack()) {
             webView.goBack();
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void showFullscreen(View view, WebChromeClient.CustomViewCallback callback) {
+        if (fullscreenView != null) {
+            callback.onCustomViewHidden();
+            return;
+        }
+        fullscreenView = view;
+        fullscreenCallback = callback;
+        webView.setVisibility(View.GONE);
+        fullscreenContainer.addView(view, new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        fullscreenContainer.setVisibility(View.VISIBLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    private void hideFullscreen() {
+        if (fullscreenView == null) return;
+        fullscreenContainer.removeView(fullscreenView);
+        fullscreenContainer.setVisibility(View.GONE);
+        webView.setVisibility(View.VISIBLE);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        if (fullscreenCallback != null) fullscreenCallback.onCustomViewHidden();
+        fullscreenView = null;
+        fullscreenCallback = null;
     }
 
     private int dp(int value) {
@@ -131,6 +176,18 @@ public class FilteredBrowserActivity extends AppCompatActivity {
                 return true;
             }
             return true;
+        }
+    }
+
+    private final class FullscreenWebChromeClient extends WebChromeClient {
+        @Override
+        public void onShowCustomView(View view, CustomViewCallback callback) {
+            showFullscreen(view, callback);
+        }
+
+        @Override
+        public void onHideCustomView() {
+            hideFullscreen();
         }
     }
 }
