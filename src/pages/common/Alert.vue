@@ -10,25 +10,16 @@
       <!-- 中間 alert -->
       <div
         :class="[
-          'relative pointer-events-auto max-w-sm w-full px-6 py-4 rounded-2xl shadow-xl backdrop-blur-md border flex justify-between items-center',
+          'relative pointer-events-auto w-fit max-w-[calc(100vw-2.5rem)] px-6 py-4 rounded-2xl shadow-xl backdrop-blur-md border flex justify-between items-center gap-4',
           typeClass
         ]"
       >
         <span class="text-sm font-medium">{{ message }}</span>
-        <button
-          @click="close"
-          class="
-            ml-4 w-6 h-6 flex items-center justify-center 
-            rounded-full 
-            bg-white/20 dark:bg-gray-700/30 
-            text-gray-800 dark:text-white 
-            hover:bg-white/40 dark:hover:bg-gray-600 
-            shadow-sm
-            transition-all duration-200
-          "
-        >
-          ×
-        </button>
+        <div v-if="confirmText" class="flex shrink-0 gap-2">
+          <button @click="close" class="rounded-lg bg-black/10 px-3 py-2 text-xs font-bold hover:bg-black/15">{{ cancelText }}</button>
+          <button @click="confirm" class="rounded-lg bg-red-600 px-3 py-2 text-xs font-bold text-white hover:bg-red-700">{{ confirmText }}</button>
+        </div>
+        <button v-else @click="close" class="ml-4 flex h-6 w-6 items-center justify-center rounded-full bg-white/20 text-gray-800 shadow-sm transition-all duration-200 hover:bg-white/40 dark:bg-gray-700/30 dark:text-white dark:hover:bg-gray-600">×</button>
       </div>
     </div>
   </transition>
@@ -41,6 +32,9 @@ const props = defineProps<{
   message: string
   type?: 'success' | 'error' | 'info' | 'warning'
   duration?: number
+  confirmText?: string
+  cancelText?: string
+  onConfirm?: () => void
   onClose?: () => void
 }>()
 
@@ -65,6 +59,11 @@ const close = () => {
   setTimeout(() => {
     if (props.onClose) props.onClose()
   }, 300)
+}
+
+const confirm = () => {
+  props.onConfirm?.()
+  close()
 }
 
 if (props.duration) {
