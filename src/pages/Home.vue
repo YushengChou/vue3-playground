@@ -123,6 +123,7 @@ interface Feature {
 
 const features: Feature[] = [
   { name: '計算機', path: '/calculator', desc: '流暢的擬態設計與鍵盤支援', emoji: '🧮' },
+  { name: '象棋暗棋', path: '/banqi', desc: '翻棋、吃子與雙人同機對戰', emoji: '♟️' },
   { name: '倒數計時', path: '/countdown', desc: '精準的時效管理工具', emoji: '⌛' },
   { name: '擲骰子', path: '/dice', desc: '隨機率與物理效果模擬', emoji: '🎲' },
   { name: '日期計算', path: '/datecalculator', desc: '快速計算天數差異與區間', emoji: '📅' },

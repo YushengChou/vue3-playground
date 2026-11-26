@@ -10,6 +10,7 @@ import SkeletonDemo from '@/pages/common/SkeletonDemo.vue'
 import WorldClock from '@/pages/common/WorldClock.vue'
 import CurrencyConverter from '@/pages/common/CurrencyConverter.vue'
 import QRCodeGenerator from '@/pages/common/QRCodeGenerator.vue'
+import Banqi from '@/pages/common/Banqi.vue'
 
 const routes = [
   { path: '/', component: Home, meta: { title: '首頁 | 常用功能' } },
@@ -22,6 +23,7 @@ const routes = [
   { path: '/worldclock', component: WorldClock, meta: { title: '世界時鐘' } },
   { path: '/currency', component: CurrencyConverter, meta: { title: '匯率轉換' } },
   { path: '/qrcode', component: QRCodeGenerator, meta: { title: 'QR Code 產生器' } },
+  { path: '/banqi', component: Banqi, meta: { title: '象棋暗棋' } },
   { path: '/location', component: () => import('@/pages/common/LocationDemo.vue'), meta: { title: '定位功能' } },
   { path: '/btn-naughty', component: () => import('@/pages/common/BtnNaughtyDemo.vue'), meta: { title: '調皮的按鈕' } },
   // Catch-all route to redirect back to home
