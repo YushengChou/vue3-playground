@@ -290,7 +290,7 @@ async function createRoom() {
 }
 
 async function joinRoom() {
-  const code = roomCode.value.trim()
+  const code = roomCode.value.trim().toUpperCase()
   if (!code) { roomError.value = '請輸入房號'; return }
   busy.value = true
   try {
